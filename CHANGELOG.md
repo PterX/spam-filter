@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.0.2] - 2026-09-21
+
+### Added
+
+### Changed
+- Updated DNSBL rules to use the new `bit_and` function.
+
+### Fixed
+
 ## [3.0.1] - 2026-09-06
 
 ### Added

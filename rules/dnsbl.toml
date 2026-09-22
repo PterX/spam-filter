@@ -136,22 +136,24 @@ scope = "domain"
 
 [dnsbl.STWT_SURBL_DOMAIN]
 zone = "value + '.multi.surbl.org'"
-tag = [ { if = "octets[3] == 128", then = "'CRACKED_SURBL'" },
-        { if = "octets[3] == 64", then = "'ABUSE_SURBL'" },
-        { if = "octets[3] == 32", then = "'CT_SURBL'" },
-        { if = "octets[3] == 16", then = "'MW_SURBL_MULTI'" },
-        { if = "octets[3] == 8", then = "'PH_SURBL_MULTI'" },
-        { if = "octets[3] == 4", then = "'DM_SURBL'" },
+tag = [ { if = "octets[0] != 127", then = "false" },
         { if = "octets[3] == 1", then = "'SURBL_BLOCKED'" },
+        { if = "bit_and(octets[3], 16) != 0", then = "'MW_SURBL_MULTI'" },
+        { if = "bit_and(octets[3], 8) != 0", then = "'PH_SURBL_MULTI'" },
+        { if = "bit_and(octets[3], 128) != 0", then = "'CRACKED_SURBL'" },
+        { if = "bit_and(octets[3], 64) != 0", then = "'ABUSE_SURBL'" },
+        { if = "bit_and(octets[3], 32) != 0", then = "'CT_SURBL'" },
+        { if = "bit_and(octets[3], 4) != 0", then = "'DM_SURBL'" },
 		{ else = false } ]
 scope = "domain"
 
 [dnsbl.STWT_URIBL_DOMAIN]
 zone = "value + '.multi.uribl.com'"
-tag = [ { if = "octets[3] == 1", then = "'URIBL_BLOCKED'" },
-        { if = "octets[3] == 2", then = "'URIBL_BLACK'" },
-        { if = "octets[3] == 4", then = "'URIBL_GREY'" },
-        { if = "octets[3] == 8", then = "'URIBL_RED'" },
+tag = [ { if = "octets[0] != 127", then = "false" },
+        { if = "octets[3] == 1", then = "'URIBL_BLOCKED'" },
+        { if = "bit_and(octets[3], 2) != 0", then = "'URIBL_BLACK'" },
+        { if = "bit_and(octets[3], 4) != 0", then = "'URIBL_GREY'" },
+        { if = "bit_and(octets[3], 8) != 0", then = "'URIBL_RED'" },
 		{ else = false } ]
 scope = "domain"
 
@@ -191,10 +193,10 @@ scope = "email"
 zone = [ { if = "key_exists('surbl-hashbl', host)", then = "hash(host + path, 'md5') + '.hashbl.surbl.org'" },
 		{ else = false } ]
 tag = [ { if = "octets[0] != 127", then = "false" },
-        { if = "octets[3] == 8", then = "'SURBL_HASHBL_PHISH'" },
-        { if = "octets[3] == 16", then = "'SURBL_HASHBL_MALWARE'" },
-        { if = "octets[3] == 64", then = "'SURBL_HASHBL_ABUSE'" },
-        { if = "octets[3] == 128", then = "'SURBL_HASHBL_CRACKED'" },
+        { if = "bit_and(octets[3], 8) != 0", then = "'SURBL_HASHBL_PHISH'" },
+        { if = "bit_and(octets[3], 16) != 0", then = "'SURBL_HASHBL_MALWARE'" },
+        { if = "bit_and(octets[3], 64) != 0", then = "'SURBL_HASHBL_ABUSE'" },
+        { if = "bit_and(octets[3], 128) != 0", then = "'SURBL_HASHBL_CRACKED'" },
         { if = "octets[2] == 1", then = "'SURBL_HASHBL_EMAIL'" },
 		{ else = false } ]
 scope = "url"
